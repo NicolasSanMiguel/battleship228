@@ -152,11 +152,16 @@ def random_location(g):
         return {'location': locations[randint(0, len(locations) - 1)], 'size': size,\
         'orientation': orientation}
 
-def get_row(g):
+def get_row(g, rguess):
     row_size = g.row_size
     while True:
         try:
-            guess = int(input("Row Guess: "))
+            # guess = int(input("Row Guess: "))
+
+            # guess
+            guess = rguess
+
+
             if guess in range(1, row_size + 1):
                 return guess - 1
             else:
@@ -164,12 +169,17 @@ def get_row(g):
         except ValueError:
             print("\nPlease enter a number")
 
-def get_col(g):
+def get_col(g, cguess):
     col_size = g.col_size
 
     while True:
         try:
-            guess = int(input("Column Guess: "))
+            # guess = int(input("Column Guess: "))
+
+            guess = cguess
+
+
+
             if guess in range(1, col_size + 1):
                 return guess - 1
             else:

@@ -6,6 +6,8 @@ from random import randint
 import os
 import random
 
+# from battleship228.believer import calc_belief
+import believer
 
 # # to call a function in battleship.py
 # out = battleship.print_board(board_array)
@@ -48,15 +50,38 @@ def main(row_size, col_size, num_ships, max_ship_size, min_ship_size):
     os.system('clear')
     battleship.print_board(g.board_display, g)
 
+    # initialize the belief state - first choice is random
+    belief_state = believer.init_belief(g,'random')
+    print('this is init belief state:\n',belief_state)
+
     for turn in range(g.num_turns):
         print("Turn:", turn + 1, "of", g.num_turns)
         print("Ships left:", len(g.ship_list))
         print()
+
+        if turn >=1 :
+            belief_state = believer.update_belief_state(g,belief_state)
+
+        row2guess, col2guess = believer.choose_max_belief(belief_state)
+        # these vars ^^ will be fed directly into the game (no humans)
+        # after it is working
+
+        # belief_state = believer.calc_belief(g)
+            
+            
+            
+            
+            
+            
+            
+            
   
         guess_coords = {}
         while True:
-            guess_coords['row'] = battleship.get_row(g)
-            guess_coords['col'] = battleship.get_col(g)
+            guess_coords['row'] = row2guess
+            guess_coords['col'] = col2guess
+            # guess_coords['row'] = battleship.get_row(g)
+            # guess_coords['col'] = battleship.get_col(g)
             if g.board_display[guess_coords['row']][guess_coords['col']] == 'X' or \
                 g.board_display[guess_coords['row']][guess_coords['col']] == '*':
                 print("\nYou guessed that one already.")
@@ -80,7 +105,14 @@ def main(row_size, col_size, num_ships, max_ship_size, min_ship_size):
             print("You missed!")
 
         battleship.print_board(g.board_display, g)
-  
+
+
+        belief_state = believer.remove_from_belief_state(g,belief_state,guess_coords,turn)
+
+
+
+
+
         if not g.ship_list:
             break
 
@@ -89,6 +121,7 @@ def main(row_size, col_size, num_ships, max_ship_size, min_ship_size):
         print("Game Over. You ran out of turns")
     else:
         print("All the ships are sunk. You win!")
+        print('you won in this many turns:',turn+1)
 
 
 if __name__ == '__main__':
